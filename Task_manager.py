@@ -1,93 +1,119 @@
+
+# Seznam úkolů – každý úkol je slovník s klíči 'nazev' a 'popis'
 ukoly = []
 
-# def hlavni_menu()
+
+# Funkce zobrazí hlavní menu a zpracuje volbu uživatele.
+# Nabízí možnosti pro přidání, zobrazení, odstranění úkolu nebo ukončení programu.
 def hlavni_menu():
-    menu = ["1. Přidat nový úkol", 
-         "2. Zobrazit všechny úkoly", 
-         "3. Odstranit úkol", 
-         "4. Konec programu"]
+    while True:
+        print("Správce úkolů - Hlavní menu")
+        menu = [
+            "1. Přidat nový úkol", 
+            "2. Zobrazit všechny úkoly", 
+            "3. Odstranit úkol", 
+            "4. Konec programu"
+        ]
+        for polozka in menu:
+            print(polozka)
 
-    print("Správce úkolů - Hlavní menu")
-    for ukol in menu:
-     print(ukol)
-
-    user_input = int(input("Vyberte možnost (1-4): "))          
-    
-    if user_input == 1:
-             print("")
-             pridat_ukol()
-
-    elif user_input == 2:
-             print("")
-             zobrazit_ukoly()
-
-    elif user_input == 3:
-             print("")
-             odstranit_ukol()
-
-    elif user_input == 4:
-             print("")
-             konec_programu()
-
-    else: 
-        print("Zadaná volba je neplatná. Prosím vyplňte znovu.")
+       # získání volby uživatele 
+        volba = input("Vyberte možnost (1-4): ").strip()
         print("")
-        hlavni_menu()
-            
-# def pridat_ukol()
-def pridat_ukol():
-      
-        user_task_1 = str(input("Zadejte název úkolu: "))
-        user_task_2 = str(input("Zadejte popis úkolu: "))
-       
-           
-        if user_task_1 == "" or user_task_2 == "": 
-            print("Zadaný název nebo popis je prázdný. Prosím vyplňte.")
+
+        # kontrola platnosti vstupu
+        if volba not in ("1", "2", "3", "4"):
+            print("Zadaná volba je neplatná. Prosím zkuste to znovu.")
+            print("")
+            continue
+
+        # zpracování volby
+        if volba == "1":
             print("")
             pridat_ukol()
-        else:
-            print(f"Úkol '{user_task_1}' byl přidán.")
-            ukoly.append((user_task_1, user_task_2))
-                                      
+
+        elif volba == "2":
             print("")
-            
-            hlavni_menu()
+            zobrazit_ukoly()
 
- # def zobrazit_ukoly()             
-def zobrazit_ukoly():
-    global ukoly
-    print("Seznam úkolů:")
-    for i, (user_task_1, user_task_2) in enumerate(ukoly, start=1):
-        print(f"{i}. {user_task_1} - {user_task_2}")
-
-    print("")
-    hlavni_menu()
-
-# def odstranit_ukol()
-def odstranit_ukol():
-    
-    cislo = int(input("Zadejte číslo úkolu, který chcete odstranit: "))
-     
-    if 1 <= cislo <= len(ukoly):
-            odstraneno=ukoly.pop(cislo -1)
-            print(f"Úkol '{odstraneno[0]}' byl odstraněn.")
+        elif volba == "3":
             print("")
-    else: 
-            print("Neexistující úkol. Vyberte prosím znovu. ")
             odstranit_ukol()
 
-    hlavni_menu()
+        elif volba == "4":
+            print("")
+            konec_programu()
+            break  # ukončení hlavní smyčky a programu
+        
+        print("")
 
-# def konec_programu()
+# Funkce pro přidání nového úkolu do seznamu `ukoly`.
+# Uživatel zadá název a popis. Pokud nejsou prázdné, úkol se uloží jako slovník do seznamu `ukoly`.
+
+def pridat_ukol():
+    while True:
+        # vstup k získání návzvu a popisu od uživatele
+        nazev_ukolu = input("Zadejte název úkolu: ").strip()
+        popis_ukolu = input("Zadejte popis úkolu: ").strip()
+
+        # kontrola platnosti vstupu a pokud nejsou prázdné, uloží se jako slovník do seznamu `ukoly`.
+        if nazev_ukolu == "" or popis_ukolu == "":
+            print("Zadaný název nebo popis je prázdný. Prosím vyplňte.")
+            print("")
+        else:
+            novy_ukol = {
+                "nazev": nazev_ukolu,
+                "popis": popis_ukolu
+            }
+            ukoly.append(novy_ukol)     # přidání nového úkolu ve formě slovníku do seznamu `ukoly`.
+            print(f"Úkol '{nazev_ukolu}' byl přidán.\n")
+            break
+
+# Funkce pro zobrazení všech úkolů v seznamu `ukoly`.
+# Každý úkol je očíslován a zobrazen s názvem a popisem.
+
+def zobrazit_ukoly():
+    if not ukoly:  # pokud je seznam prázdný, zobrazí se pouze oznámení
+         print("Seznam úkolů:")
+    else:
+        print("Seznam úkolů:")
+        for index, ukol in enumerate(ukoly, start=1):  # zobrazí očíslovaný Seznam  úkolů, který se začíná číslovat od čísla 1 s nazvem a popisem
+            print(f"{index}. {ukol['nazev']} - {ukol['popis']}")
+    print("")
+
+# Funkce pro odstranění úkolu na základě jeho čísla ze seznamu.
+# Pokud seznam úkolů není prázdný, uživatel zadá číslo úkolu ke smazání.
+# Funkce ověřuje správnost vstupu a upozorní na chyby.
+
+def odstranit_ukol():
+# Pokud je seznam úkolů prázdný, zobrazí zprávu a ukončí funkci,
+# protože není žádný úkol, který by bylo možné odstranit.
+    if not ukoly:
+            print("Seznam úkolů je prázdný. Není co odstranit.\n")
+            return
+        
+    
+    zobrazit_ukoly()  # pokud není prázdný seznam `ukoly`, zobrazí se seznam s výpisem úkolů
+    
+    # Nekonečná smyčka pro zajištění opakovaného dotazování uživatele,
+    # dokud nezadá platné číslo úkolu k odstranění.
+    while True:
+        try:
+            # Převedení vstupu od uživatele na celé číslo
+            cislo_ukolu = int(input("Zadejte číslo úkolu, který chcete odstranit: "))
+            if 1 <= cislo_ukolu <= len(ukoly):  # Kontrola, zda číslo odpovídá existujícímu úkolu v seznamu
+                odstraneny_ukol = ukoly.pop(cislo_ukolu - 1)
+                print(f"Úkol '{odstraneny_ukol['nazev']}' byl odstraněn.\n")
+                break # Ukončení smyčky po úspěšném odstranění
+            else:
+                print("Neexistující číslo úkolu. Zkuste to znovu.\n")  # Upozornění na neexistující číslo úkolu
+        except ValueError:
+            print("Zadejte platné číslo.\n")  # Ošetření případu, kdy uživatel nezadá číslo (např. zadá text)
+    print("")
+
+# Funkce pro ukončení programu s oznámením
 def konec_programu():
-      print("Konec programu.")
-      print("")
+    print("Konec programu.\n")
 
-
-# volání funkce hlavni_menu()
-      
+# Spuštění hlavního menu při startu aplikace
 hlavni_menu()
-
-
-
-
